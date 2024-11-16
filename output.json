@@ -1,0 +1,128 @@
+[
+    {
+        "id": 1,
+        "type": "branch",
+        "events": [
+            {
+                "customer_request_id": 2,
+                "logical_clock": 5,
+                "interface": "deposit_propagate_request",
+                "comment": "event_recv from branch 2"
+            },
+            {
+                "customer_request_id": 2,
+                "logical_clock": 6,
+                "interface": "deposit_propagate_execute",
+                "comment": "event_exec on branch 1"
+            },
+            {
+                "customer_request_id": 4,
+                "logical_clock": 7,
+                "interface": "withdraw_propagate_request",
+                "comment": "event_recv from branch 2"
+            },
+            {
+                "customer_request_id": 4,
+                "logical_clock": 8,
+                "interface": "withdraw_propagate_execute",
+                "comment": "event_exec on branch 1"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "type": "branch",
+        "events": [
+            {
+                "customer_request_id": 2,
+                "logical_clock": 2,
+                "interface": "deposit_request",
+                "comment": "event_recv from customer"
+            },
+            {
+                "customer_request_id": 2,
+                "logical_clock": 3,
+                "interface": "deposit_execute",
+                "comment": "event_exec on branch 2"
+            },
+            {
+                "customer_request_id": 2,
+                "logical_clock": 4,
+                "interface": "deposit_response",
+                "comment": "event_sent to customer"
+            },
+            {
+                "customer_request_id": 2,
+                "logical_clock": 7,
+                "interface": "deposit_propagate_response",
+                "comment": "event_recv from branch 1"
+            },
+            {
+                "customer_request_id": 4,
+                "logical_clock": 10,
+                "interface": "withdraw_propagate_request",
+                "comment": "event_recv from branch 1"
+            },
+            {
+                "customer_request_id": 4,
+                "logical_clock": 11,
+                "interface": "withdraw_propagate_execute",
+                "comment": "event_exec on branch 2"
+            },
+            {
+                "customer_request_id": 2,
+                "logical_clock": 12,
+                "interface": "deposit_propagate_response",
+                "comment": "event_sent to branch 1"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "type": "branch",
+        "events": [
+            {
+                "customer_request_id": 4,
+                "logical_clock": 2,
+                "interface": "withdraw_request",
+                "comment": "event_recv from customer"
+            },
+            {
+                "customer_request_id": 4,
+                "logical_clock": 3,
+                "interface": "withdraw_execute",
+                "comment": "event_exec on branch 3"
+            },
+            {
+                "customer_request_id": 4,
+                "logical_clock": 4,
+                "interface": "withdraw_response",
+                "comment": "event_sent to customer"
+            },
+            {
+                "customer_request_id": 4,
+                "logical_clock": 9,
+                "interface": "withdraw_propagate_response",
+                "comment": "event_recv from branch 2"
+            },
+            {
+                "customer_request_id": 2,
+                "logical_clock": 10,
+                "interface": "deposit_propagate_request",
+                "comment": "event_recv from branch 2"
+            },
+            {
+                "customer_request_id": 2,
+                "logical_clock": 11,
+                "interface": "deposit_propagate_execute",
+                "comment": "event_exec on branch 3"
+            },
+            {
+                "customer_request_id": 4,
+                "logical_clock": 12,
+                "interface": "withdraw_propagate_response",
+                "comment": "event_sent to branch 1"
+            }
+        ]
+    }
+]
