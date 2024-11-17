@@ -1,15 +1,14 @@
+import json
 import grpc
 from concurrent import futures
-import banks_pb2
 import banks_pb2_grpc
 from branch import Branch
-import json
 
-def serve():
+def serve(input_file):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     
     # Read input from JSON file
-    with open('input.json', 'r') as f:
+    with open(input_file, 'r') as f:
         data = json.load(f)
     
     # Create branches
@@ -31,4 +30,8 @@ def serve():
     server.wait_for_termination()
 
 if __name__ == '__main__':
-    serve()
+    import sys
+    if len(sys.argv) != 2:
+        print("Usage: python server.py input.json")
+        sys.exit(1)
+    serve(sys.argv[1])
