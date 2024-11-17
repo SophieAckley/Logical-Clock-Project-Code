@@ -4,7 +4,7 @@ from concurrent import futures
 import banks_pb2_grpc
 from branch import Branch
 
-def serve(input_file):
+def serve(input_file, port=50051):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     
     # Read input from JSON file
@@ -25,13 +25,15 @@ def serve(input_file):
     for branch in branches.values():
         branch.set_other_branches([b for b in branches.values() if b.id != branch.id])
     
-    server.add_insecure_port('[::]:50051')
-    server.start()
-    server.wait_for_termination()
+    server.add_insecure_port(f'[::]:{port}')
+    server.start()  # 添加这行
+    print(f"Server started on port {port}")  # 添加服务器状态输出
+    server.wait_for_termination()  # 添加这行
 
 if __name__ == '__main__':
     import sys
-    if len(sys.argv) != 2:
-        print("Usage: python server.py input.json")
+    if len(sys.argv) < 2:
+        print("Usage: python server.py input.json [port]")
         sys.exit(1)
-    serve(sys.argv[1])
+    port = int(sys.argv[2]) if len(sys.argv) > 2 else 50051  # 确保port是整数
+    serve(sys.argv[1], port)
