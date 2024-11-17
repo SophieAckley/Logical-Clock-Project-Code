@@ -1,28 +1,48 @@
-import json
 import grpc
 import banks_pb2
 import banks_pb2_grpc
-import time
+import json
+from customer import Customer
 
-def run_customer(customer_id, events):
-    channel = grpc.insecure_channel(f'localhost:{50000 + customer_id}')
-    stub = banks_pb2_grpc.BankServiceStub(channel)
+def run():
+    # Read input from JSON file
+    with open('input.json', 'r') as f:
+        data = json.load(f)
+    
+    # Create customers and execute their requests
+    customers = []
+    for process in data:
+        if process['type'] == 'customer':
+            customer_id = process['id']
+            requests = process['customer-requests']
+            customer = Customer(customer_id, requests)
+            customers.append(customer)
+    
+    # Execute customer requests
+    for customer in customers:
+        customer.execute_requests()
+    
+    # Generate output
+    generate_output(customers)
 
-    for event in events:
-        request = banks_pb2.Request(
-            id=event['id'],
-            interface=event['interface'],
-            money=event.get('money', 0),
-            logical_clock=0  # Initial clock value; will be updated in responses
-        )
-        response = stub.MsgDelivery(request)
-        print(f"Customer {customer_id} received response: {response}")
-        time.sleep(0.5)
+def generate_output(customers):
+    output = []
+    
+    # Part 1: Customer events
+    for customer in customers:
+        output.append({
+            "id": customer.id,
+            "type": "customer",
+            "events": customer.events
+        })
+    
+    # Part 2: Branch events (to be implemented)
+    
+    # Part 3: All events triggered by customer requests (to be implemented)
+    
+    # Write output to JSON file
+    with open('output.json', 'w') as f:
+        json.dump(output, f, indent=2)
 
-# Load input and run clients
-with open('input.json') as f:
-    data = json.load(f)
-    customers = [item for item in data if item['type'] == 'customer']
-
-for customer in customers:
-    run_customer(customer['id'], customer['events'])
+if __name__ == '__main__':
+    run()
