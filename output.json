@@ -1,1 +1,73 @@
 
+[
+  {
+    "id": 1,
+    "type": "customer",
+    "events": [
+      {
+        "customer_request_id": 1,
+        "logical_clock": 1,
+        "interface": "deposit",
+        "money": 10,
+        "comment": "Customer 1 processed request 1."
+      },
+      {
+        "customer_request_id": 2,
+        "logical_clock": 2,
+        "interface": "withdraw",
+        "money": 10,
+        "comment": "Customer 1 processed request 2."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "type": "customer",
+    "events": [
+      {
+        "customer_request_id": 3,
+        "logical_clock": 1,
+        "interface": "deposit",
+        "money": 10,
+        "comment": "Customer 2 processed request 3."
+      },
+      {
+        "customer_request_id": 4,
+        "logical_clock": 2,
+        "interface": "withdraw",
+        "money": 10,
+        "comment": "Customer 2 processed request 4."
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "type": "branch",
+    "balance": 400,
+    "events": []
+  },
+  {
+    "id": 2,
+    "type": "branch",
+    "balance": 400,
+    "events": []
+  },
+  {
+    "event_id": 1,
+    "customer_id": 1,
+    "customer_request_id": 1,
+    "interface": "deposit",
+    "money": 10,
+    "logical_clock": 1,
+    "comment": "Event 1 processed for customer 1 and request 1."
+  },
+  {
+    "event_id": 2,
+    "customer_id": 1,
+    "customer_request_id": 2,
+    "interface": "withdraw",
+    "money": 10,
+    "logical_clock": 2,
+    "comment": "Event 2 processed for customer 1 and request 2."
+  }
+]
