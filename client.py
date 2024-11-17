@@ -1,12 +1,11 @@
-import grpc
-import banks_pb2
-import banks_pb2_grpc
 import json
+import grpc
+import banks_pb2_grpc
 from customer import Customer
 
-def run():
+def run(input_file):
     # Read input from JSON file
-    with open('input.json', 'r') as f:
+    with open(input_file, 'r') as f:
         data = json.load(f)
     
     # Create customers and execute their requests
@@ -22,8 +21,10 @@ def run():
             branches.append(process)
     
     # Execute customer requests
+    channel = grpc.insecure_channel('localhost:50051')
+    stub = banks_pb2_grpc.BankStub(channel)
     for customer in customers:
-        customer.execute_requests()
+        customer.execute_requests(stub)
     
     # Generate output
     generate_output(customers, branches)
@@ -72,4 +73,8 @@ def generate_output(customers, branches):
         json.dump(output, f, indent=2)
 
 if __name__ == '__main__':
-    run()
+    import sys
+    if len(sys.argv) != 2:
+        print("Usage: python client.py input.json")
+        sys.exit(1)
+    run(sys.argv[1])
