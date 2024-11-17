@@ -1,76 +1,87 @@
-import json
 import grpc
+import json
 import banks_pb2_grpc
+import banks_pb2
 from customer import Customer
 
 def run(input_file):
-    # Read input from JSON file
-    with open(input_file, 'r') as f:
-        data = json.load(f)
+    try:
+        # 创建与服务器的连接
+        print("Connecting to server...")
+        channel = grpc.insecure_channel('localhost:50051')
+        stub = banks_pb2_grpc.BankStub(channel)
+        
+        # 读取输入文件
+        print("Reading input file...")
+        with open(input_file, 'r') as f:
+            data = json.load(f)
     
-    # Create customers and execute their requests
-    customers = []
-    branches = []
-    for process in data:
-        if process['type'] == 'customer':
-            customer_id = process['id']
-            requests = process['customer-requests']
-            customer = Customer(customer_id, requests)
-            customers.append(customer)
-        elif process['type'] == 'branch':
-            branches.append(process)
+        # 分离客户和分支数据
+        customers = []
+        branches = []
     
-    # Execute customer requests
-    channel = grpc.insecure_channel('localhost:50051')
-    stub = banks_pb2_grpc.BankStub(channel)
-    for customer in customers:
-        customer.execute_requests(stub)
+        for process in data:
+            if process['type'] == 'customer':
+                customer_id = process['id']
+                requests = process['customer-requests']
+                customer = Customer(customer_id, requests)
+                customers.append(customer)
+            elif process['type'] == 'branch':
+                branches.append(process)
     
-    # Generate output
-    generate_output(customers, branches)
-
-def generate_output(customers, branches):
-    output = []
+        # 执行所有客户请求
+        for customer in customers:
+            customer.execute_requests(stub)
     
-    # Part 1: Customer events
-    for customer in customers:
-        output.append({
+        # 生成输出文件
+        output = []
+    
+        # 1. 添加客户进程
+        for customer in customers:
+            output.append({
             "id": customer.id,
             "type": "customer",
-            "events": customer.events
-        })
+                "events": customer.events
+            })
     
-    # Part 2: Branch events
-    for branch in branches:
-        branch_events = []  # This should be populated with actual branch events
-        output.append({
-            "id": branch['id'],
-            "type": "branch",
-            "events": branch_events
+        # 2. 添加分支进程
+        for branch in branches:
+            output.append({
+                "id": branch['id'],
+                "type": "branch",
+                "events": []  # 分支事件将由服务器端记录
         })
-    
-    # Part 3: All events triggered by customer requests
-    all_events = []
-    for customer in customers:
-        for event in customer.events:
-            all_events.append({
-                "id": customer.id,
+           
+    # 3. 输出结果   
+        # 3. 添加所有事件（按逻辑时钟排序）
+        all_events = []
+        
+        # 收集客户事件
+        for customer in customers:
+            for event in customer.events:
+                all_events.append({
+                    "id": customer.id,
                 "customer-request-id": event["customer-request-id"],
                 "type": "customer",
                 "logical_clock": event["logical_clock"],
                 "interface": event["interface"],
-                "comment": event["comment"]
-            })
-    
-    # Sort all events by logical clock
-    all_events.sort(key=lambda x: x["logical_clock"])
-    
-    # Add sorted events to output
-    output.extend(all_events)
-    
-    # Write output to JSON file
-    with open('output.json', 'w') as f:
-        json.dump(output, f, indent=2)
+                    "comment": event["comment"]
+                })
+        
+        # 按逻辑时钟排序
+        all_events.sort(key=lambda x: x["logical_clock"])
+        
+        # 将排序后的事件添加到输出
+        output.extend(all_events)
+        
+        # 写入输出文件
+        print("Writing output.json...")
+        with open('output.json', 'w') as f:
+            json.dump(output, f, indent=2)
+        print("Successfully generated output.json")
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        raise         
 
 if __name__ == '__main__':
     import sys
