@@ -478,6 +478,38 @@
         "logical_clock": 60,
         "interface": "withdraw",
         "comment": "event_recv from customer 4"
+    },
+    {
+        "id": 1,
+        "type": "branch",
+        "customer-request-id": 8,
+        "logical_clock": 61,
+        "interface": "withdraw",
+        "comment": "event_recv from customer 4"
+    },
+    {
+        "id": 2,
+        "type": "branch",
+        "customer-request-id": 8,
+        "logical_clock": 62,
+        "interface": "withdraw",
+        "comment": "event_recv from customer 4"
+    },
+    {
+        "id": 3,
+        "type": "branch",
+        "customer-request-id": 8,
+        "logical_clock": 63,
+        "interface": "withdraw",
+        "comment": "event_recv from customer 4"
+    },
+    {
+        "id": 4,
+        "type": "branch",
+        "customer-request-id": 8,
+        "logical_clock": 64,
+        "interface": "withdraw",
+        "comment": "event_recv from customer 4"
     }
 ]
 
